@@ -28,9 +28,10 @@ public class hoTenServelet extends HttpServlet {
         try {
             String name = req.getParameter("name");
             Integer age = Integer.parseInt(req.getParameter("age"));
-
-            req.setAttribute("name", name);
-            req.setAttribute("age", age);
+            
+            if(age < 0){
+                req.setAttribute("error", "age must larger than 0");
+            }
         } catch (NumberFormatException nfe) {
             req.setAttribute("error", "Wrong input age!!");
         }

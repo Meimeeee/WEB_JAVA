@@ -19,8 +19,8 @@
 
                 <%
                     String error = (String) request.getAttribute("error");
-                    String name = (String) request.getParameter("name");
-                    String ageStr = (String) request.getParameter("age");
+                    String name = request.getParameter("name");
+                    String ageStr = request.getParameter("age");
                 %>
 
                 <%
@@ -40,20 +40,12 @@
                 <hr>
 
                 <%
-                    if (name != null && ageStr != null) {
-                        if (Integer.parseInt(ageStr) > 0) {
+                    if (name != null && ageStr != null && error == null) {
                 %>
-
-
                     <p>Kết quả:</p>
                     <p>Họ và tên: <%=name%></p>
                     <p>Tuổi: <%= ageStr%></p>
                 <%
-                    } else {
-                %>
-                    <p style="color: red">Age must larger than 0</p>
-                <%
-                        }
                     }
                 %>
             </form>
