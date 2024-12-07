@@ -7,6 +7,7 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,20 +16,26 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import src.productDAO;
-import src.productDTO;
+import src.ProductDAO;
+import src.ProductDTO;
 
 /**
  *
  * @author ngoct
  */
-public class productServlet extends HttpServlet {
+public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        productDAO DAO = productDAO.getInstance();
-        List<productDTO> listProduct = DAO.getList();
-        req.setAttribute("listProduct", listProduct);
+        try {
+            ProductDAO DAO = ProductDAO.getInstance();
+            List<ProductDTO> listProduct = DAO.getList();
+            req.setAttribute("listProduct", listProduct);
+            
+//            req.setAttribute("error", "?????????????????");
+        } catch (SQLException ex) {
+            req.setAttribute("error", ex.getMessage());
+        }
         req.getRequestDispatcher("product.jsp").forward(req, resp);
     }
 
@@ -57,19 +64,19 @@ public class productServlet extends HttpServlet {
         try {
             String productName = req.getParameter("productName");
             String productDescription = req.getParameter("productDescription");
-            Integer productPrice = Integer.parseInt(req.getParameter("productPrice"));
+            Long productPrice = Long.parseLong(req.getParameter("productPrice"));
 
-            productDTO product = new productDTO(null, productName, productDescription, productPrice);
+            ProductDTO product = new ProductDTO(null, productName, productDescription, productPrice);
 
-            productDAO DAO = productDAO.getInstance();
+            ProductDAO DAO = ProductDAO.getInstance();
             DAO.add(product);
 
-            List<productDTO> listProduct = DAO.getList();
+            List<ProductDTO> listProduct = DAO.getList();
             req.setAttribute("listProduct", listProduct);
-            
+
         } catch (NumberFormatException nfe) {
             req.setAttribute("error", "Wrong number format");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             req.setAttribute("error", e.getMessage());
         }
 
@@ -82,18 +89,18 @@ public class productServlet extends HttpServlet {
             Integer productId = Integer.parseInt(req.getParameter("productId"));
             String productName = req.getParameter("productName");
             String productDescription = req.getParameter("productDescription");
-            Integer productPrice = Integer.parseInt(req.getParameter("productPrice"));
+            Long productPrice = Long.parseLong(req.getParameter("productPrice"));
 
-            productDTO product = new productDTO(productId, productName, productDescription, productPrice);
-            productDAO DAO = productDAO.getInstance();
+            ProductDTO product = new ProductDTO(productId, productName, productDescription, productPrice);
+            ProductDAO DAO = ProductDAO.getInstance();
             DAO.update(product);
 
-            List<productDTO> listProduct = DAO.getList();
+            List<ProductDTO> listProduct = DAO.getList();
             req.setAttribute("listProduct", listProduct);
 
         } catch (NumberFormatException nfe) {
             req.setAttribute("error", "Wrong number format");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             req.setAttribute("error", e.getMessage());
         }
 
@@ -103,22 +110,20 @@ public class productServlet extends HttpServlet {
     public void handleDeleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Integer productId = Integer.parseInt(req.getParameter("productId"));
-            
-            productDAO DAO = productDAO.getInstance();
+
+            ProductDAO DAO = ProductDAO.getInstance();
             DAO.delete(productId);
-            
-            List<productDTO> listProduct = DAO.getList();
+
+            List<ProductDTO> listProduct = DAO.getList();
             req.setAttribute("listProduct", listProduct);
-            
+
         } catch (NumberFormatException nfe) {
             req.setAttribute("error", "Wrong number format");
-        } catch (Exception e){
+        } catch (SQLException e) {
             req.setAttribute("error", e.getMessage());
         }
-        
+
         req.getRequestDispatcher("product.jsp").forward(req, resp);
     }
-    
-    
 
 }

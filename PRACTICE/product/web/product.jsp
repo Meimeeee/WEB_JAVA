@@ -1,7 +1,6 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
-<%@page import="src.productDTO"%>
-<%@page import="src.productDTO"%>
+<%@page import="src.ProductDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -37,12 +36,22 @@
     <body>
 
         <%
-            List<productDTO> listProduct = (List<productDTO>) request.getAttribute("listProduct");
+            String error = (String) request.getAttribute("error");
+            List<ProductDTO> listProduct = (List<ProductDTO>) request.getAttribute("listProduct");
             if (listProduct == null)
-                listProduct = new ArrayList<productDTO>();
+                listProduct = new ArrayList<ProductDTO>();
         %>
         <div id="root">
             <h1>Product List</h1>
+
+            <%
+                if (error != null) {
+            %>
+            <p style="color: red"> <%= error %> </p>
+            <%
+                }
+            %>
+
             <div id="sanPhamControl">
                 <div>
                     <h3>Add product</h3>
@@ -57,7 +66,7 @@
                         </div>
                         <div>
                             <label for="createProductPriceInput">Price</label>
-                            <input type="number" min="1000" id="createProductPriceInput" required name="productPrice"/>
+                            <input type="number" min="1000" step="1000"  id="createProductPriceInput" required name="productPrice"/>
                         </div>
                         <div>
                             <button type="submit" name="operation" value="add">Add</button>
@@ -73,7 +82,7 @@
 
                                 <%
                                     for (int i = 0; i < listProduct.size(); i++) {
-                                        productDTO product = listProduct.get(i);
+                                        ProductDTO product = listProduct.get(i);
                                 %>
                                 <option value="<%= product.getProductId()%>"> <%= product.getProductName()%> </option>
                                 <%
@@ -92,7 +101,7 @@
                         </div>
                         <div>
                             <label for="updateProductPriceInput">Price</label>
-                            <input type="number" min="1000" id="updateProductPriceInput" required name="productPrice"/>
+                            <input type="number" min="1000" step="1000" id="updateProductPriceInput" required name="productPrice"/>
                         </div>
                         <div>
                             <button type="submit" name="operation" value="update">Save</button>
@@ -115,7 +124,7 @@
                     <tbody>
                         <%
                             for (int i = 0; i < listProduct.size(); i++) {
-                                productDTO product = listProduct.get(i);
+                                ProductDTO product = listProduct.get(i);
                         %>
                         <tr>
                             <td><%= product.getProductId()%></td>
@@ -125,15 +134,15 @@
 
                             <td>
                                 <form action="" method="post">
-                                    <input type="hidden" name="productId" value="<%= product.getProductId() %>"/>
+                                    <input type="hidden" name="productId" value="<%= product.getProductId()%>"/>
                                     <button type="submit" name="operation" value="delete">Delete</button>
                                 </form>
                             </td>
 
-                    </tr>
-                    <%
-                        }
-                    %>
+                        </tr>
+                        <%
+                            }
+                        %>
                     </tbody>
                 </table>
             </div>

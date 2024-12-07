@@ -5,6 +5,10 @@
  */
 package src;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,57 +16,61 @@ import java.util.List;
  *
  * @author ngoct
  */
-public class productDAO {
+public class ProductDAO {
 
-    public static productDAO intstance;
+    public static ProductDAO intstance;
 
-    public static productDAO getInstance() {
+    public static ProductDAO getInstance() {
         if (intstance == null) {
-            intstance = new productDAO();
+            intstance = new ProductDAO();
         }
         return intstance;
     }
 
-    private List<productDTO> data;
-    private int lastIndex;
+    
 
-    private productDAO() {
-        data = new ArrayList<>();
-        data.add(new productDTO(1, "San pham 1", "Mo ta cua san pham 1", 100000));
-        data.add(new productDTO(2, "San pham 2", "Mo ta cua san pham 2", 50000));
-        data.add(new productDTO(3, "San pham 3", "Mo ta cua san pham 3", 300000));
-        data.add(new productDTO(4, "San pham 4", "Mo ta cua san pham 4", 1000000));
-        data.add(new productDTO(5, "San pham 5", "Mo ta cua san pham 5", 600000));
-        lastIndex = data.size();
-    }
+    public List<ProductDTO> getList() throws SQLException, ClassNotFoundException {
+        List<ProductDTO> data = new ArrayList<ProductDTO>();
+        Connection connect = JDBC.ConnectJDBC.getConnect();
+        PreparedStatement ps = connect.prepareStatement("SELECT * FROM product");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            ProductDTO product = new ProductDTO(rs.getInt("product_id"),
+                    rs.getString("product_name"),
+                    rs.getString("product_description"),
+                    rs.getLong("product_price")
+            );
+            data.add(product);
+        }
 
-    public List<productDTO> getList() {
         return data;
     }
 
-    public void add(productDTO product) {
-        product.setProductId(++lastIndex);
-        data.add(product);
+    public void add(ProductDTO product) throws SQLException, ClassNotFoundException {
+        Connection connect = JDBC.ConnectJDBC.getConnect();
+        PreparedStatement ps = connect.prepareStatement("INSERT INTO product(product_name, product_description, product_price) VALUES(?, ?, ?)");
+        ps.setString(1, product.getProductName());
+        ps.setString(2, product.getProductDescription());
+        ps.setLong(3, product.getProductPrice());
+        ps.execute();
     }
 
-    public void update(productDTO product) throws Exception {
-        for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).getProductId().equals(product.getProductId())) {
-                data.set(i, product);
-                return;
-            }
-        }
-        throw new Exception("Not found product ID");
+    public void update(ProductDTO product) throws SQLException, ClassNotFoundException {
+        Connection connect = JDBC.ConnectJDBC.getConnect();
+        PreparedStatement ps = connect.prepareStatement("UPDATE product SET "
+                + "product_name = ?, product_description = ?, product_price = ? WHERE product_id = ?");
+        ps.setString(1, product.getProductName());
+        ps.setString(2, product.getProductDescription());
+        ps.setLong(3, product.getProductPrice());
+        ps.setInt(4, product.getProductId());
+        ps.execute();
     }
 
-    public void delete(Integer productId) throws Exception {
-        for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).getProductId().equals(productId)) {
-                data.remove(i);
-                return;
-            }
-        }
-        throw new Exception("Not found product");
+    public void delete(Integer productId) throws SQLException, ClassNotFoundException{
+        Connection connect = JDBC.ConnectJDBC.getConnect();
+        PreparedStatement ps = connect.prepareStatement("DELETE FROM product WHERE product_id = ?");
+        ps.setInt(1, productId);
+        ps.execute();
     }
 
 }

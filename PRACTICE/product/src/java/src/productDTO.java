@@ -9,16 +9,16 @@ package src;
  *
  * @author ngoct
  */
-public class productDTO {
+public class ProductDTO {
     private Integer productId;
     private String productName;
     private String productDescription;
-    private Integer productPrice;
+    private Long productPrice;
 
-    public productDTO() {
+    public ProductDTO() {
     }
 
-    public productDTO(Integer productId, String productName, String productDescription, Integer productPrice) {
+    public ProductDTO(Integer productId, String productName, String productDescription, Long productPrice) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -49,11 +49,11 @@ public class productDTO {
         this.productDescription = productDescription;
     }
 
-    public Integer getProductPrice() {
+    public Long getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Integer productPrice) {
+    public void setProductPrice(Long productPrice) {
         this.productPrice = productPrice;
     }
 
