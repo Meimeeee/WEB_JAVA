@@ -35,6 +35,8 @@ public class ProductServlet extends HttpServlet {
 //            req.setAttribute("error", "?????????????????");
         } catch (SQLException ex) {
             req.setAttribute("error", ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         req.getRequestDispatcher("product.jsp").forward(req, resp);
     }
@@ -60,7 +62,7 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
-    public void handleAddProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void handleAddProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, ClassNotFoundException {
         try {
             String productName = req.getParameter("productName");
             String productDescription = req.getParameter("productDescription");
@@ -83,7 +85,7 @@ public class ProductServlet extends HttpServlet {
         req.getRequestDispatcher("product.jsp").forward(req, resp);
     }
 
-    public void handleUpdateProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void handleUpdateProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, ClassNotFoundException {
         try {
 
             Integer productId = Integer.parseInt(req.getParameter("productId"));
@@ -107,7 +109,7 @@ public class ProductServlet extends HttpServlet {
         req.getRequestDispatcher("product.jsp").forward(req, resp);
     }
 
-    public void handleDeleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void handleDeleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, ClassNotFoundException {
         try {
             Integer productId = Integer.parseInt(req.getParameter("productId"));
 

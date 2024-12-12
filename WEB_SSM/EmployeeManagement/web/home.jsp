@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="DTO.positionDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="DAO.employeeDAO"%>
@@ -31,13 +32,9 @@
         <div style="background-color: burlywood;">
             <h1 style="text-align: center">Employee Management</h1>
 
-            <%
-                if (error != null) {
-            %>
-            <h3 style="color: #ff3333"> <%= error%></h3>
-            <%
-                }
-            %>
+            <c:if test="${requestScope.error != null}">
+                <h3 style="color: #ff3333">${requestScope.error}</h3>
+            </c:if>
 
             <div style="display: grid; grid-template-columns: 50% 50%;">
                 <form action="" method="post">
@@ -50,13 +47,10 @@
                         <div>
                             <label for="selectPosition">Position</label>
                             <select id="selectPosition" name="position">
-                                <%
-                                    for (positionDTO position : positions) {
-                                %>
-                                <option value="<%= position.getPositionID()%>"> <%= position.getPositionName()%> </option>
-                                <%
-                                    }
-                                %>
+
+                                <c:forEach items="${requestScope.positions}" var="position">
+                                    <option value="${position.positionID}">${position.positionName}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div>
@@ -79,13 +73,9 @@
                         <div>
                             <label for="selectEmployee">Id Employee</label>
                             <select id="selectEmployee" name="employeeID">
-                                <%
-                                    for (employeeDTO employee : employees) {
-                                %>
-                                <option value="<%= employee.getEmployeeID() %>"><%= employee.getEmployeeID()%></option>
-                                <%
-                                    }
-                                %>
+                                <c:forEach items="${requestScope.employees}" var="employee">
+                                    <option value="${employee.employeeID}">${employee.employeeID}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div>
@@ -95,13 +85,9 @@
                         <div>
                             <label for="">Position</label>
                             <select id="selectPosition" name="position">
-                                <%
-                                    for (positionDTO position : positions) {
-                                %>
-                                <option value="<%= position.getPositionID()%>"> <%= position.getPositionName()%> </option>
-                                <%
-                                    }
-                                %>
+                                <c:forEach items="${requestScope.positions}" var="position">
+                                    <option value="${position.positionID}">${position.positionName}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div>
@@ -136,27 +122,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <%
-                                    for (employeeDTO employee : employees) {
-                                %>
-                                <tr>
-                                    <td> <%= employee.getEmployeeID()%> </td>
-                                    <td> <%= employee.getEmployeeName()%> </td>
-                                    <td> <%= employee.getPhone()%> </td>
-                                    <td> <%= employee.getMail()%> </td>
-                                    <td> <%= employee.getPositionID()%> </td>
-                                    <td> <%= employee.getSalary()%> </td>
-                                    <td>
-                                        <form action="" method="post">
-                                            <input type="hidden" name="employeeID" value="<%= employee.getEmployeeID()%>"/>
-                                            <button type="submit" name="func" value="delete">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <%
-                                    }
-                                %>
 
+                                <c:forEach items="${requestScope.employees}" var="employee" varStatus="status">
+                                    <tr>
+                                        <td> ${status.index+1}</td>
+                                        <td> ${employee.employeeID}</td>
+                                        <td> ${employee.employeeName}</td>
+                                        <td> ${employee.phone}</td>
+                                        <td> ${employee.mail}</td>
+                                        <td> ${employee.positionID}</td>
+                                        <td> ${employee.salary}</td>
+                                        <td>
+                                            <form action="" method="post">
+                                                <input type="hidden" name="employeeID" value="${employee.employeeID}"/>
+                                                <button type="submit" name="func" value="delete">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
                         </table>
                     </div>

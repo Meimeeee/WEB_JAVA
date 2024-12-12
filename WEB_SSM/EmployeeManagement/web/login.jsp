@@ -4,6 +4,7 @@
     Author     : ngoct
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -17,12 +18,12 @@
         <h1>Login form</h1>
         <%
             String error = (String) request.getAttribute("error");
-            if (error != null) {
         %>
-        <p style="color: red"> <%= error%> </p>
-        <%
-            }
-        %>
+        
+        <c:if test="${requestScope.error != null}">
+            <p style="color: crimson">${requestScope.error}</p>
+        </c:if>
+        
 
         <form action="" method="post">
             <div>
